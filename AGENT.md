@@ -160,6 +160,8 @@ mostly-independent feature/integration:
 | `:canvas`, `:echomusiccanvas`, `:applecanvas` | Canvas-style looping video backgrounds for tracks (different providers) |
 | `:artistvideo` | Artist video features |
 | `:unison` | Cross-cutting shared utility module (check source before editing) |
+| `:wearcommon` | Wire protocol (Data Layer paths, command names, state keys) shared by `:app` and `:wear` — the only place those strings may live |
+| `:wear` | **Wear OS app** (separate APK, same `applicationId` as the phone app) — remote control / now-playing for the phone |
 
 When adding a new external integration (a new lyrics source, a new canvas
 provider, etc.), the existing pattern is: **new Gradle module**, register it
@@ -230,6 +232,31 @@ widget/         Home-screen widget
 - Shimmer loading placeholders (`ui/component/shimmer/`, `libs.shimmer`) are
   the standard loading-state pattern — use them for new async-loading UI
   instead of spinners.
+
+## Wear OS app (`:wear` + `:wearcommon`)
+
+A companion watch app (`./gradlew :wear:assembleDebug`, min SDK 30 / Wear OS 3, `standalone=false`).
+It does **not** play music itself: it shows the phone's now-playing state and remote-controls it
+over the Wearable Data Layer.
+
+- **Protocol** lives in `:wearcommon` (`WearProtocol`). Phone → watch: one Data Item
+  (`/echo/state`: track, JPEG art `Asset`, position, duration, liked/shuffle/repeat, volume, next
+  ≤20 queue entries). Watch → phone: messages `/echo/cmd/<command>` (play_pause, next, previous,
+  toggle_like/shuffle/repeat, volume_step, play_queue_item, request_state).
+- **Phone side:** `wearsync/WearSyncManager.kt`, created/stopped by `MusicService` (so it lives
+  with the player). It debounces player events, only publishes while a watch with the app is
+  reachable (capability `echo_music_watch`), and executes commands on the main thread. Volume
+  commands change the system `STREAM_MUSIC` volume. `app/res/values/wear_capabilities.xml`
+  advertises `echo_music_phone`; the `echomusic://open` deep link backs "Open on phone".
+- **Watch side:** `wear/.../data/PhoneRepository.kt` (Data Layer I/O, only registered while the UI
+  is started), `ui/PlayerViewModel.kt`, screens in `ui/` (`PlayerScreen` pager: player + toggles,
+  `QueueScreen`, `StatusScreen` for no-phone / idle / connecting).
+- **Keep `wear` and `app` `applicationId` (+ debug suffix) and signing key in sync**, otherwise the
+  Data Layer will not connect them and Play will not serve them as one listing.
+- Wear Compose is pinned to `wearCompose` in the version catalog; 1.7.x needs AGP 9.1+, so stay on
+  1.6.x until AGP is bumped.
+- **Design exception:** the watch UI follows **Wear OS Material 3 design guidelines**, *not* the
+  Nothing OS / liquid-glass rules above — see "Wear OS" in `DESIGN.md`.
 
 ## Commit message format (required)
 

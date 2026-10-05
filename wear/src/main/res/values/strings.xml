@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Echo Music</string>
+
+    <!-- Player -->
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="up_next">Up next</string>
+    <string name="unknown_artist">Unknown artist</string>
+    <string name="volume_percent">%1$d%%</string>
+
+    <!-- Options -->
+    <string name="like">Like</string>
+    <string name="unlike">Remove like</string>
+    <string name="shuffle_on">Shuffle on</string>
+    <string name="shuffle_off">Shuffle off</string>
+    <string name="repeat_off">Repeat off</string>
+    <string name="repeat_all">Repeat all</string>
+    <string name="repeat_one">Repeat one</string>
+
+    <!-- Connection / empty states -->
+    <string name="phone_not_connected">Phone not connected</string>
+    <string name="phone_not_connected_hint">Make sure your watch is connected to your phone and Echo Music is installed.</string>
+    <string name="nothing_playing">Nothing playing</string>
+    <string name="nothing_playing_hint">Start a song on your phone, or open Echo Music there.</string>
+    <string name="open_on_phone">Open on phone</string>
+    <string name="opened_on_phone">Opened on your phone</string>
+    <string name="open_on_phone_failed">Couldn\'t open the phone app</string>
+    <string name="connecting">Connecting…</string>
+    <string name="queue_empty">Queue is empty</string>
+</resources>

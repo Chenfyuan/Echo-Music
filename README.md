@@ -76,6 +76,7 @@ Echo Music delivers a seamless, premium listening experience by leveraging YouTu
 > - **Settings Search Index** — Quickly find and navigate to any settings option instantly.
 > - **Redesigned UI** — Cleaner, faster, and more intuitive interface from the ground up.
 > - **Import & Sync from Spotify** — Bring your playlists over with ease and keep them up-to-date with one-tap Fast Sync.
+> - **Wear OS App** — Control playback from your watch: now playing with album art, play/pause/skip, like, shuffle/repeat, volume on the crown, and the up-next queue.
 > - **Listen Together** — Sync music in real time, similar to Spotify Jam.
 > - **Podcast Support** — Listen to podcasts alongside your music library.
 > - **Local Media Support** — Play music files stored directly on your device.
@@ -197,6 +198,18 @@ Download the latest pre-compiled APK from the [Releases Page](https://github.com
    _(For optimized ARM64 builds, release builds, or other options, refer to [SETUP.md](SETUP.md))_
 
 </details>
+
+---
+
+### Wear OS
+
+The watch app is a remote for the phone app (it does not play music on its own). Requirements:
+a Wear OS 3+ watch paired to the phone running Echo Music (debug and release variants must match
+on both devices). Build and install it on the watch with:
+
+```bash
+./gradlew :wear:installDebug   # watch connected over adb / Wi‑Fi debugging
+```
 
 ---
 

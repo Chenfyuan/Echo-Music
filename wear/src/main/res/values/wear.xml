@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Read by Google Play services (not by code) so the phone can discover this watch app. -->
+    <string-array name="android_wear_capabilities" tools:ignore="UnusedResources">
+        <item>echo_music_watch</item>
+    </string-array>
+</resources>

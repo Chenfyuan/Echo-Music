@@ -34,7 +34,9 @@ include(
     ":unison",
     ":core",
     ":lyrics",
-    ":playback"
+    ":playback",
+    ":wearcommon",
+    ":wear"
 )
 
 

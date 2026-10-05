@@ -162,6 +162,7 @@ import echo.music.iad1tya.utils.dataStore
 import echo.music.iad1tya.utils.get
 import echo.music.iad1tya.utils.isLocalMediaId
 import echo.music.iad1tya.utils.reportException
+import echo.music.iad1tya.wearsync.WearSyncManager
 import echo.music.iad1tya.widget.EchoMusicWidgetManager
 import echo.music.iad1tya.widget.MusicWidgetReceiver
 import echo.music.iad1tya.widget.WidgetQueueItem
@@ -409,6 +410,7 @@ class MusicService : MediaLibraryService(), Player.Listener, PlaybackStatsListen
   private var crossfadeJob: Job? = null
 
   private lateinit var mediaSession: MediaLibrarySession
+  private var wearSyncManager: WearSyncManager? = null
 
   private val playerInitialized = MutableStateFlow(false)
   val isPlayerReady: kotlinx.coroutines.flow.StateFlow<Boolean> = playerInitialized.asStateFlow()
@@ -670,6 +672,17 @@ class MusicService : MediaLibraryService(), Player.Listener, PlaybackStatsListen
     val sessionToken = SessionToken(this, ComponentName(this, MusicService::class.java))
     val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
     controllerFuture.addListener({ controllerFuture.get() }, MoreExecutors.directExecutor())
+
+    wearSyncManager =
+      WearSyncManager(
+          context = this,
+          player = player,
+          scope = scope,
+          isLiked = { currentSong.value?.song?.liked == true },
+          toggleLike = ::toggleLike,
+          likedChanges = currentSong.map { it?.song?.liked == true },
+        )
+        .also { it.start() }
 
     connectivityManager = getSystemService()!!
     connectivityObserver = NetworkConnectivityObserver(this)
@@ -3646,6 +3659,8 @@ class MusicService : MediaLibraryService(), Player.Listener, PlaybackStatsListen
 
   override fun onDestroy() {
     isRunning = false
+    wearSyncManager?.stop()
+    wearSyncManager = null
     releasePrebuffered()
 
     try {

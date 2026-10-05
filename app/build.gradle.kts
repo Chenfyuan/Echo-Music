@@ -243,11 +243,16 @@ dependencies {
 
   implementation(project(":core"))
   implementation(project(":playback"))
+  implementation(project(":wearcommon"))
 
   // Firebase - GMS flavor only (excluded from F-Droid / FOSS builds)
   "gmsImplementation"(platform("com.google.firebase:firebase-bom:34.19.0"))
   "gmsImplementation"("com.google.firebase:firebase-analytics")
   "gmsImplementation"("com.google.firebase:firebase-crashlytics")
+
+  // Wearable Data Layer: syncs now-playing state with / takes commands from the Wear OS app
+  implementation(libs.play.services.wearable)
+  implementation(libs.coroutines.play.services)
 
   // GMS Location Services for high-accuracy weather AI context
   "gmsImplementation"(libs.play.services.location)

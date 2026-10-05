@@ -91,3 +91,32 @@ Before adding a brand new UI component, always check `ui/component/` to see if a
 ## Ambient Mode Canvas
 
 Ambient Mode may layer muted Canvas video artwork inside the existing album-art square. Keep the original square size, rounded clipping, and interaction surface unchanged; Canvas is a non-interactive visual layer above the normal album art and follows playback state. The existing glow background remains separate underneath the screen.
+
+
+---
+
+## 6. Wear OS (`:wear`)
+
+The watch app is the one place that **intentionally follows Google's Wear OS design guidelines
+(Material 3 Expressive for Wear, `androidx.wear.compose:compose-material3`)** instead of the phone
+aesthetic above — a 1.5" round OLED needs different patterns than a phone, and users expect a
+watch app to behave like the rest of the watch.
+
+*   **Theme:** dark only, true-black background (OLED, battery), colour scheme tinted from the
+    phone's `0xFFED5564` seed (`ui/theme/EchoWearTheme.kt`). No glass / blur effects.
+*   **Scaffolding:** `AppScaffold` → `SwipeDismissableNavHost` (swipe right to go back) →
+    `ScreenScaffold` per screen (time text, scroll indicator). Lists use `TransformingLazyColumn`
+    with Wear `Button`s and a `ListHeader`; never a phone-style `LazyColumn`.
+*   **Now playing:** dimmed album art as background, title (marquee) + artist, a bezel
+    `CircularProgressIndicator` (295°→245°, gap at the bottom), prev / play-pause / next row, and an
+    `EdgeButton` at the bottom for the secondary destination ("Up next"). Toggles (like, shuffle,
+    repeat) sit on a second `HorizontalPager` page as `IconToggleButton`s.
+*   **Input:** the rotary crown / bezel changes the phone's volume (with a short volume HUD). Touch
+    targets are ≥ 48dp (`IconButtonDefaults.DefaultButtonSize`); text uses Wear typography only.
+*   **Ambient mode:** `AmbientLifecycleObserver`; when ambient show a black screen with title and
+    artist only — no artwork, no progress arc, no ticking animation.
+*   **Empty states** (no phone / nothing playing / connecting) are full-screen `StatusScreen`s; the
+    "nothing playing" state offers "Open on phone" via `RemoteActivityHelper`.
+*   **Icons:** small vector drawables under `wear/src/main/res/drawable` (Material Symbols paths);
+    the Material Icons Extended library is deliberately *not* pulled onto the watch.
+*   **Strings** live in `wear/src/main/res/values*/strings.xml` (English + zh-CN so far).

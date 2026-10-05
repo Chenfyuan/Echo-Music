@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Echo Music</string>
+
+    <string name="play">播放</string>
+    <string name="pause">暂停</string>
+    <string name="next">下一首</string>
+    <string name="previous">上一首</string>
+    <string name="up_next">待播清单</string>
+    <string name="unknown_artist">未知艺术家</string>
+    <string name="volume_percent">%1$d%%</string>
+
+    <string name="like">喜欢</string>
+    <string name="unlike">取消喜欢</string>
+    <string name="shuffle_on">随机播放：开</string>
+    <string name="shuffle_off">随机播放：关</string>
+    <string name="repeat_off">循环：关</string>
+    <string name="repeat_all">列表循环</string>
+    <string name="repeat_one">单曲循环</string>
+
+    <string name="phone_not_connected">手机未连接</string>
+    <string name="phone_not_connected_hint">请确认手表已与手机连接，且手机已安装 Echo Music。</string>
+    <string name="nothing_playing">没有正在播放的内容</string>
+    <string name="nothing_playing_hint">请在手机上播放一首歌，或在手机上打开 Echo Music。</string>
+    <string name="open_on_phone">在手机上打开</string>
+    <string name="opened_on_phone">已在手机上打开</string>
+    <string name="open_on_phone_failed">无法打开手机应用</string>
+    <string name="connecting">正在连接…</string>
+    <string name="queue_empty">待播清单为空</string>
+</resources>
