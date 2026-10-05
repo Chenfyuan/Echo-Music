@@ -27,4 +27,18 @@
     <string name="open_on_phone_failed">无法打开手机应用</string>
     <string name="connecting">正在连接…</string>
     <string name="queue_empty">待播清单为空</string>
+
+    <string name="offline_music">离线音乐</string>
+    <string name="sync_from_phone">从手机同步</string>
+    <string name="sync_requesting">正在等待手机…</string>
+    <string name="sync_progress">第 %1$d / %2$d 首</string>
+    <string name="sync_up_to_date">已是最新</string>
+    <string name="sync_failed">同步失败</string>
+    <string name="sync_needs_phone">请连接手机后同步</string>
+    <plurals name="offline_summary">
+        <item quantity="other">%1$d 首 · %2$s</item>
+    </plurals>
+    <string name="offline_none">暂无歌曲</string>
+    <string name="songs_to_sync">同步歌曲数量</string>
+    <string name="offline_empty_hint">在手机 Echo Music 中下载的歌曲可以复制到手表，脱离手机也能播放。</string>
 </resources>

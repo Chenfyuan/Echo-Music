@@ -30,4 +30,20 @@
     <string name="open_on_phone_failed">Couldn\'t open the phone app</string>
     <string name="connecting">Connecting…</string>
     <string name="queue_empty">Queue is empty</string>
+
+    <!-- Offline music -->
+    <string name="offline_music">Offline music</string>
+    <string name="sync_from_phone">Sync from phone</string>
+    <string name="sync_requesting">Waiting for phone…</string>
+    <string name="sync_progress">Song %1$d of %2$d</string>
+    <string name="sync_up_to_date">Up to date</string>
+    <string name="sync_failed">Sync failed</string>
+    <string name="sync_needs_phone">Connect your phone to sync</string>
+    <plurals name="offline_summary">
+        <item quantity="one">%1$d song · %2$s</item>
+        <item quantity="other">%1$d songs · %2$s</item>
+    </plurals>
+    <string name="offline_none">No songs yet</string>
+    <string name="songs_to_sync">Songs to sync</string>
+    <string name="offline_empty_hint">Songs you downloaded in Echo Music on your phone can be copied here and played without your phone.</string>
 </resources>

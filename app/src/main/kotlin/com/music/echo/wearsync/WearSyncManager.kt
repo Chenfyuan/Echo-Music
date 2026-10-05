@@ -1,17 +1,11 @@
 package echo.music.iad1tya.wearsync
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.media.AudioManager
 import androidx.core.content.getSystemService
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import coil3.imageLoader
-import coil3.request.ImageRequest
-import coil3.request.SuccessResult
-import coil3.request.allowHardware
-import coil3.toBitmap
 import com.google.android.gms.wearable.Asset
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.CapabilityInfo
@@ -23,10 +17,8 @@ import echo.music.iad1tya.extensions.metadata
 import echo.music.iad1tya.wear.WearProtocol
 import echo.music.iad1tya.wear.WearProtocol.Command
 import echo.music.iad1tya.wear.WearProtocol.StateKeys
-import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -34,7 +26,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 /**
@@ -306,27 +297,12 @@ class WearSyncManager(
     if (url.isNullOrBlank()) return null
     artworkAsset =
       try {
-        withContext(Dispatchers.IO) {
-          val request =
-            ImageRequest.Builder(appContext)
-              .data(url)
-              .size(WearProtocol.ARTWORK_SIZE_PX)
-              .allowHardware(false)
-              .build()
-          val result = appContext.imageLoader.execute(request) as? SuccessResult
-          result?.image?.toBitmap()?.toJpegAsset()
-        }
+        loadWearArtworkJpeg(appContext, url)?.let { Asset.createFromBytes(it) }
       } catch (e: Exception) {
         Timber.tag(TAG).d(e, "Failed to load watch artwork")
         null
       }
     return artworkAsset
-  }
-
-  private fun Bitmap.toJpegAsset(): Asset {
-    val out = ByteArrayOutputStream()
-    compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, out)
-    return Asset.createFromBytes(out.toByteArray())
   }
 
   private fun Int.toWireRepeatMode(): Int =
@@ -341,6 +317,5 @@ class WearSyncManager(
   private companion object {
     const val TAG = "WearSyncManager"
     const val SYNC_DEBOUNCE_MS = 250L
-    const val JPEG_QUALITY = 80
   }
 }

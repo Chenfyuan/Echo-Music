@@ -107,6 +107,24 @@ class PhoneRepository(context: Context) {
   fun playQueueItem(index: Int) =
     send(WearProtocol.Command.PLAY_QUEUE_ITEM, ByteBuffer.allocate(Int.SIZE_BYTES).putInt(index).array())
 
+  /** Asks the phone to send its downloaded songs; progress is reported through [OfflineLibrary]. */
+  fun requestOfflineSync(limit: Int, haveIds: List<String>) {
+    val payload =
+      org.json.JSONObject()
+        .put(WearProtocol.OfflineKeys.LIMIT, limit)
+        .put(WearProtocol.OfflineKeys.HAVE, org.json.JSONArray(haveIds))
+        .toString()
+        .toByteArray(Charsets.UTF_8)
+    val nodeId = phoneNodeId ?: return
+    scope.launch {
+      try {
+        messageClient.sendMessage(nodeId, WearProtocol.PATH_OFFLINE_REQUEST, payload).await()
+      } catch (e: Exception) {
+        Log.w(TAG, "Failed to request offline sync", e)
+      }
+    }
+  }
+
   /** The phone node commands go to, nearest first; `null` if the phone isn't reachable. */
   val phoneNodeId: String?
     get() = phoneNodes.minByOrNull { if (it.isNearby) 0 else 1 }?.id

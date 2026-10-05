@@ -67,6 +67,8 @@ android {
 
   buildFeatures { compose = true }
 
+  testOptions { unitTests.isIncludeAndroidResources = true }
+
   dependenciesInfo {
     includeInApk = false
     includeInBundle = false
@@ -96,8 +98,15 @@ dependencies {
   implementation(libs.wear.compose.foundation)
   implementation(libs.wear.compose.navigation)
 
+  implementation(libs.media3)
+  implementation(libs.media3.session)
+
   implementation(libs.play.services.wearable)
   implementation(libs.coroutines.play.services)
   implementation(libs.coroutines.guava)
   implementation(libs.guava)
+
+  testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.androidx.test.core)
 }

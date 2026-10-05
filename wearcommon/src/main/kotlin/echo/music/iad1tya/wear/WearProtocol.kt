@@ -91,4 +91,49 @@ object WearProtocol {
 
   /** Artwork edge length (px) sent to the watch. */
   const val ARTWORK_SIZE_PX = 320
+
+  /**
+   * Offline sync: lets the watch keep songs the phone has downloaded and play them without the
+   * phone.
+   *
+   * 1. Watch → phone message [PATH_OFFLINE_REQUEST], JSON `{"limit": n, "have": [ids]}`.
+   * 2. Phone → watch message [PATH_OFFLINE_MANIFEST], JSON `{"ids": [...], "missing": [...]}`:
+   *    the full ordered set the watch should hold, and the subset that will be transferred.
+   * 3. For each missing id the phone opens a channel [PATH_OFFLINE_SONG_CHANNEL] and writes one
+   *    frame, see [OfflineFrame].
+   * 4. Phone → watch message [PATH_OFFLINE_DONE] (empty payload) when it has finished or given up.
+   */
+  const val PATH_OFFLINE_REQUEST = "/echo/offline/request"
+  const val PATH_OFFLINE_MANIFEST = "/echo/offline/manifest"
+  const val PATH_OFFLINE_SONG_CHANNEL = "/echo/offline/song"
+  const val PATH_OFFLINE_DONE = "/echo/offline/done"
+
+  /** Bounds for how many songs the watch may ask for. */
+  const val OFFLINE_MIN_LIMIT = 5
+  const val OFFLINE_MAX_LIMIT = 100
+
+  /** JSON keys shared by the request, manifest and frame header. */
+  object OfflineKeys {
+    const val LIMIT = "limit"
+    const val HAVE = "have"
+    const val IDS = "ids"
+    const val MISSING = "missing"
+
+    const val ID = "id"
+    const val TITLE = "title"
+    const val ARTIST = "artist"
+    const val ALBUM = "album"
+    const val DURATION_MS = "duration_ms"
+    const val MIME_TYPE = "mime_type"
+    const val AUDIO_SIZE = "audio_size"
+    const val ARTWORK_SIZE = "artwork_size"
+  }
+
+  /**
+   * Channel frame layout: `[int32 headerLength][header JSON, UTF-8][artwork JPEG bytes, length =
+   * artwork_size][audio bytes, length = audio_size]`. All integers are big-endian.
+   */
+  object OfflineFrame {
+    const val MAX_HEADER_BYTES = 16 * 1024
+  }
 }

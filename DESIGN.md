@@ -119,4 +119,8 @@ watch app to behave like the rest of the watch.
     "nothing playing" state offers "Open on phone" via `RemoteActivityHelper`.
 *   **Icons:** small vector drawables under `wear/src/main/res/drawable` (Material Symbols paths);
     the Material Icons Extended library is deliberately *not* pulled onto the watch.
+*   **Offline music** (`LibraryScreen`): a `TransformingLazyColumn` with a sync `Button` (the
+    secondary label carries status: waiting / song x of y / up to date / failed), a "songs to
+    sync" `FilledTonalButton` that cycles 10/25/50/100, then the songs as two-line `Button`s.
+    Reached from the status screens and the options page; playing a song returns to the player.
 *   **Strings** live in `wear/src/main/res/values*/strings.xml` (English + zh-CN so far).

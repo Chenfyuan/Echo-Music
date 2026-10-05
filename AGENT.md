@@ -236,8 +236,9 @@ widget/         Home-screen widget
 ## Wear OS app (`:wear` + `:wearcommon`)
 
 A companion watch app (`./gradlew :wear:assembleDebug`, min SDK 30 / Wear OS 3, `standalone=false`).
-It does **not** play music itself: it shows the phone's now-playing state and remote-controls it
-over the Wearable Data Layer.
+It has two modes: a **remote** for the phone's player (Wearable Data Layer), and a **standalone
+offline player** for songs synced from the phone's downloads. It cannot stream from YouTube Music
+by itself.
 
 - **Protocol** lives in `:wearcommon` (`WearProtocol`). Phone → watch: one Data Item
   (`/echo/state`: track, JPEG art `Asset`, position, duration, liked/shuffle/repeat, volume, next
@@ -251,6 +252,18 @@ over the Wearable Data Layer.
 - **Watch side:** `wear/.../data/PhoneRepository.kt` (Data Layer I/O, only registered while the UI
   is started), `ui/PlayerViewModel.kt`, screens in `ui/` (`PlayerScreen` pager: player + toggles,
   `QueueScreen`, `StatusScreen` for no-phone / idle / connecting).
+- **Offline sync (watch plays without the phone):** watch sends `/echo/offline/request`
+  (`limit`, `have` ids) → phone `WearOfflineRequestService` enqueues an expedited
+  `WearOfflineSyncWorker` (foreground `dataSync`) → it picks the newest fully-cached downloads
+  (`downloadedSongs`, audio read raw from the `@DownloadCache` `SimpleCache`, no transcoding),
+  sends `/echo/offline/manifest` (full ordered set + missing subset), then one Channel per missing
+  song (`/echo/offline/song`, frame layout in `WearProtocol.OfflineFrame`), then
+  `/echo/offline/done`. Watch: `OfflineSyncListenerService` → `OfflineLibrary` (files under
+  `filesDir/offline`, `index.json`, mirrors the manifest and prunes the rest, validates ids against
+  path traversal, needs 100MB free). Playback: `playback/LocalPlaybackService` (Media3 session
+  service) controlled via `playback/LocalPlayer`; `PlayerViewModel` routes controls to the phone or
+  the watch and pauses the other source when one starts. Unit-tested in
+  `wear/src/test/.../OfflineLibraryTest` (`./gradlew :wear:testDebugUnitTest`).
 - **Keep `wear` and `app` `applicationId` (+ debug suffix) and signing key in sync**, otherwise the
   Data Layer will not connect them and Play will not serve them as one listing.
 - Wear Compose is pinned to `wearCompose` in the version catalog; 1.7.x needs AGP 9.1+, so stay on

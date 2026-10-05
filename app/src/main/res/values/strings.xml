@@ -954,5 +954,8 @@
     <string name="import_custom_font">Import Custom Font</string>
     <string name="typography_preview">Typography Preview</string>
     <string name="preview_text_quote">The quick brown fox jumps over the lazy dog</string>
+    <string name="wear_sync_channel">Watch sync</string>
+    <string name="wear_sync_title">Sending music to your watch</string>
+    <string name="wear_sync_progress">Song %1$d of %2$d</string>
 </resources>
 

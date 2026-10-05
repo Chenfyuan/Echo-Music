@@ -33,6 +33,8 @@ data class PlayerState(
   val volumeMax: Int = 0,
   val artwork: Bitmap? = null,
   val queue: List<QueueEntry> = emptyList(),
+  /** The phone can like songs; the watch's own offline player can't. */
+  val canLike: Boolean = true,
 ) {
   /** Playback position extrapolated to [nowElapsedMs] while playing. */
   fun positionAt(nowElapsedMs: Long): Long {

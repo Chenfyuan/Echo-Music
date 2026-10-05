@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.pager.HorizontalPager
 import androidx.wear.compose.foundation.pager.rememberPagerState
+import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.EdgeButton
 import androidx.wear.compose.material3.EdgeButtonSize
@@ -81,6 +82,7 @@ fun PlayerPages(
   onToggleRepeat: () -> Unit,
   onVolumeSteps: (Int) -> Unit,
   onOpenQueue: () -> Unit,
+  onOpenLibrary: () -> Unit,
 ) {
   if (isAmbient) {
     AmbientPlayer(state)
@@ -106,6 +108,7 @@ fun PlayerPages(
             onToggleLike = onToggleLike,
             onToggleShuffle = onToggleShuffle,
             onToggleRepeat = onToggleRepeat,
+            onOpenLibrary = onOpenLibrary,
           )
       }
     }
@@ -313,6 +316,7 @@ private fun OptionsPage(
   onToggleLike: () -> Unit,
   onToggleShuffle: () -> Unit,
   onToggleRepeat: () -> Unit,
+  onOpenLibrary: () -> Unit,
 ) {
   ScreenScaffold {
     Column(
@@ -321,19 +325,21 @@ private fun OptionsPage(
       verticalArrangement = Arrangement.Center,
     ) {
       Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        val likeLabel = stringResource(if (state.liked) R.string.unlike else R.string.like)
-        IconToggleButton(
-          checked = state.liked,
-          onCheckedChange = { onToggleLike() },
-          modifier = Modifier.size(IconButtonDefaults.DefaultButtonSize),
-        ) {
-          Icon(
-            painter =
-              painterResource(
-                if (state.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border
-              ),
-            contentDescription = likeLabel,
-          )
+        if (state.canLike) {
+          val likeLabel = stringResource(if (state.liked) R.string.unlike else R.string.like)
+          IconToggleButton(
+            checked = state.liked,
+            onCheckedChange = { onToggleLike() },
+            modifier = Modifier.size(IconButtonDefaults.DefaultButtonSize),
+          ) {
+            Icon(
+              painter =
+                painterResource(
+                  if (state.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+                ),
+              contentDescription = likeLabel,
+            )
+          }
         }
         val shuffleLabel =
           stringResource(if (state.shuffle) R.string.shuffle_on else R.string.shuffle_off)
@@ -367,15 +373,13 @@ private fun OptionsPage(
           )
         }
       }
-      Text(
-        text =
-          state.album.ifBlank { state.title },
-        style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis,
-        textAlign = TextAlign.Center,
+      Button(
+        onClick = onOpenLibrary,
         modifier = Modifier.padding(top = 10.dp),
+        icon = {
+          Icon(painter = painterResource(R.drawable.ic_music_note), contentDescription = null)
+        },
+        label = { Text(stringResource(R.string.offline_music), maxLines = 1) },
       )
     }
   }

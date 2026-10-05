@@ -203,7 +203,9 @@ Download the latest pre-compiled APK from the [Releases Page](https://github.com
 
 ### Wear OS
 
-The watch app is a remote for the phone app (it does not play music on its own). Requirements:
+The watch app remote-controls the phone, and can also play songs you downloaded in Echo Music on
+its own: open **Offline music → Sync from phone** (phone nearby), then play them with no phone.
+It can't stream from YouTube Music by itself. Requirements:
 a Wear OS 3+ watch paired to the phone running Echo Music (debug and release variants must match
 on both devices). Build and install it on the watch with:
 

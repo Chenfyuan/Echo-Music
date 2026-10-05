@@ -38,7 +38,7 @@ enum class StatusKind {
 
 /** Full-screen state for "no phone", "phone but nothing playing" and "still connecting". */
 @Composable
-fun StatusScreen(kind: StatusKind) {
+fun StatusScreen(kind: StatusKind, onOpenLibrary: () -> Unit) {
   val scrollState = rememberScrollState()
   ScreenScaffold(scrollState = scrollState) { contentPadding ->
     Column(
@@ -73,6 +73,7 @@ fun StatusScreen(kind: StatusKind) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
           )
+          OfflineMusicButton(onOpenLibrary)
         }
         StatusKind.NothingPlaying -> {
           Icon(
@@ -93,10 +94,20 @@ fun StatusScreen(kind: StatusKind) {
             textAlign = TextAlign.Center,
           )
           OpenOnPhoneButton()
+          OfflineMusicButton(onOpenLibrary)
         }
       }
     }
   }
+}
+
+@Composable
+private fun OfflineMusicButton(onClick: () -> Unit) {
+  Button(
+    onClick = onClick,
+    icon = { Icon(painter = painterResource(R.drawable.ic_music_note), contentDescription = null) },
+    label = { Text(stringResource(R.string.offline_music)) },
+  )
 }
 
 /** Launches Echo Music on the paired phone (shows the standard Wear "Open on phone" animation). */
